@@ -43,7 +43,9 @@ export class App implements OnInit {
     }
     catch (error){
       console.log(error);
+      return null;
     }
+
      
   }
 } // class ends here
