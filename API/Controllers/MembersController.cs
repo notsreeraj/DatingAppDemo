@@ -1,15 +1,16 @@
 using API.Data;
 using API.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    // so this is the route i guess
-    [Route("api/[controller]")] // localhost5001/api/members
-    [ApiController]
-    public  class MembersController(AppDbContext context) : ControllerBase
+    // // so this is the route i guess
+    // [Route("api/[controller]")] // localhost5001/api/members
+    // [ApiController]
+    // the above line is commented because the baseApiContoller already has it
+    public class MembersController(AppDbContext context) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
@@ -18,6 +19,7 @@ namespace API.Controllers
             return members;
         }
 
+        [Authorize]
         [HttpGet("{id}")] // localhost5001/api/members/bob-id
         // here the id inside the qoutes acts as a route parameter
         public async Task<ActionResult<AppUser>> GetMember(string id)
