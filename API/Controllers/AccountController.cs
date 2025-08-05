@@ -47,6 +47,17 @@ public class AccountController(AppDbContext context , ITokenService tokenService
         // using dto - Data transfer object , to transfer data between two layers
     }
 
+
+    /*
+    User Data + Your Secret Key → JWT Token
+    ↓
+    Header: {"alg":"HS512","typ":"JWT"}
+    Payload: {"email":"user@example.com","nameid":"123"}
+    Signature: HMAC512(header + payload, secret_key)
+    ↓
+    Final Token: header.payload.signature (all Base64 encoded)
+    */
+
     [HttpPost("Login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {

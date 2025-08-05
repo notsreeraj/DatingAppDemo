@@ -12,4 +12,6 @@ public class AppUser
     // here passSalt is a random string to scramble the hash password so the no hashed pass is same for two users
     public required byte[] PasswordSalt { get; set; }
 
+    
+
 }

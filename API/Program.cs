@@ -25,19 +25,16 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
-    // getting the token key from the config file and use it to decrypt the token
+    // getting the token key from the config file and use it to valiadate the token
     var tokenKey = builder.Configuration["TokenKey"]
         ?? throw new Exception("Token key not found - Program.cs");
     // setting up the options with token validation parameters
-    options.TokenValidationParameters = new TokenValidationParameters
+   options.TokenValidationParameters = new TokenValidationParameters
     {
-        // validate the signing key of the token
-        ValidateIssuerSigningKey = true,
-        // give it the issuer sign in key 
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-        // 
-        ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateIssuerSigningKey = true,  // "Check the signature is valid"
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)), // "Use this key to verify"
+        ValidateIssuer = false,   // "Don't check who issued the token"
+        ValidateAudience = false  // "Don't check who the token is for"
     };
  });
 
@@ -55,3 +52,17 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// this is how the authenticatio works , mainly the order of methods 
+/*
+Received Token → Split into 3 parts
+    ↓
+Decode header and payload (Base64 decode - anyone can do this)
+    ↓
+Recreate signature: HMAC512(header + payload, YOUR_secret_key)
+    ↓
+Compare: Does recreated signature = received signature?
+    ↓
+If YES → Token is valid (created by you)
+If NO → Token is invalid/tampered
+*/
