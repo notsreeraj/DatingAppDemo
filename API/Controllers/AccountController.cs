@@ -35,9 +35,19 @@ public class AccountController(AppDbContext context , ITokenService tokenService
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
             PasswordSalt = hmac.Key
         };
-        // this line adds the new user to the database , 
-        // we are referencing context here which is our DbContext at this point
+        //adds use to ef changes tracker
+        /*
+            ✅ Adds user to EF's change tracker
+            ✅ Marks the entity as "Added"
+            ✅ Stages the INSERT operation
+        */
         context.Users.Add(user);
+        /*
+            ✅ Generates SQL INSERT statement
+            ✅ Executes the SQL on database
+            ✅ Returns generated ID back to EF
+            ✅ Updates entity with database-generated values
+        */
         await context.SaveChangesAsync();
 
         // here we dont have to pass in use as parameter because we are already using it on user which is an object of AppUse
@@ -64,7 +74,7 @@ public class AccountController(AppDbContext context , ITokenService tokenService
       // confirming email   
         var user = await context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email);
    
-        if (user == null) return Unauthorized("Invalid email address");
+        if (user == null) return Unauthorized("Invalid email address from API");
 
         // after getting the user with the same email address
         // we use the salt from the user reference above
