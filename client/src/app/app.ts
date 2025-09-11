@@ -1,5 +1,4 @@
 // imports httpclient service from angular application
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { Nav } from "../layout/nav/nav";
