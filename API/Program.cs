@@ -22,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddCors();
 // here the controller will know which class to instantaite when we use token services
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 // a new package is installed for this "jwt bearer"
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
@@ -54,6 +56,30 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+#region  Seed data (Service Locator Pattern)
+
+// seed the data 
+// service locator pattern
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<AppDbContext>();
+    // adding migration through code rather than through cli
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occured during Migration");
+};
+#endregion
+
+
+
 
 app.Run();
 
