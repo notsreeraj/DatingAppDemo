@@ -17,7 +17,7 @@ public class TokenService(IConfiguration config) : ITokenService
             JWT Token Structure:
             header.payload.signature
             
-            Example: eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20ifQ.signature_hash
+            Example: eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20ifQ.psignature_hash
             
             Header:    {"alg":"HS512","typ":"JWT"}
             Payload:   {"email":"user@example.com","nameid":"123","exp":1692883200}

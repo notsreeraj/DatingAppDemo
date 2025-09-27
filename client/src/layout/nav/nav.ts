@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router, RouterLink,RouterLinkActive  } from '@angular/router';
 import { ToastService } from '../../core/services/toast-service';
-
+import { themes } from '../themes';
 
 
 @Component({
@@ -12,7 +12,8 @@ import { ToastService } from '../../core/services/toast-service';
   templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
-export class Nav {
+export class Nav implements OnInit{
+
   // here the account service is injected 
   protected accountService = inject(AccountService)
   private router = inject(Router)
@@ -20,7 +21,23 @@ export class Nav {
 
   protected creds: any = {}
   protected loggedIn = signal(false)
-  
+  protected selectedTheme = signal<string>(localStorage.getItem('theme') || 'light');
+  protected themes = themes;
+ 
+
+  ngOnInit(): void {
+    document.documentElement.setAttribute('data-theme',this.selectedTheme());
+  }
+
+  handleSelected(theme:string){
+    this.selectedTheme.set(theme);
+    localStorage.setItem('theme' , theme);
+    // set the theme with daisy ui
+    document.documentElement.setAttribute('data-theme',theme);
+    const elem = document.activeElement as HTMLDivElement;
+    if(elem) elem.blur();
+  }
+
 
   login() {
     console.log("Login Func from nav.ts is called by ngSubmit from loginform in nav.html");

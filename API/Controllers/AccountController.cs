@@ -26,7 +26,7 @@ public class AccountController(AppDbContext context , ITokenService tokenService
         Console.WriteLine("Debug ResisterDto : " + registerDto);
         // the using key word helps to dispose the instance of hmacsha512 object after using it in the scope
         using var hmac = new HMACSHA512(); // this is to get the random salt
-        // the salr would be the key property of hmac
+        // the salt would be the key property of hmac
 
         var user = new AppUser
         {
@@ -50,7 +50,7 @@ public class AccountController(AppDbContext context , ITokenService tokenService
         */
         await context.SaveChangesAsync();
 
-        // here we dont have to pass in use as parameter because we are already using it on user which is an object of AppUse
+        // here we dont have to pass in user as parameter because we are already using it on user which is an object of AppUse
         // and also in the method definition the parameter of appuser has this keyword
         return user.ToDto(tokenService);
 

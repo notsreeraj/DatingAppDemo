@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { LoginCreds, RegisterCreds, User } from '../../types/user';
 import { tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 
 // this class is injectable
 // sevices are singletons
@@ -14,7 +16,8 @@ export class AccountService {
   // union type , it can null or user
   currentUser = signal<User | null>(null);
 
-  baseUrl = 'https://localhost:5001/api/';
+   private baseUrl= environment.apiUrl
+ 
 
   register(creds: RegisterCreds){
     return this.http.post<User>(this.baseUrl+"account/register",creds).pipe(
@@ -31,8 +34,11 @@ export class AccountService {
   // the pip key word is a Rsjx operator
   return this.http.post<User>(this.baseUrl + 'account/login', creds).pipe(
     tap(user => {
+      console.log("this is from inside if use condition in account-service.ts")
       if(user){
+        
         this.setCurrentUser(user);
+        
       }
     })
   );
@@ -47,6 +53,11 @@ export class AccountService {
   setCurrentUser(user : User){
     localStorage.setItem('user',JSON.stringify(user));
     this.currentUser.set(user);
+    console.log("This is the current user" + user.displayName);
+  }
+
+  getCurrentUser(){
+     return this.currentUser()?.displayName;
   }
 
 }// class ends here
