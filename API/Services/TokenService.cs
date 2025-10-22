@@ -51,6 +51,7 @@ public class TokenService(IConfiguration config) : ITokenService
             new(ClaimTypes.Email, user.Email),
             
             // Store user's ID - can be accessed later with ClaimTypes.NameIdentifier
+            // this is later used in memberController to update member details
             // This is like the "primary key" to identify which user this token belongs to
             new(ClaimTypes.NameIdentifier, user.Id)
         };

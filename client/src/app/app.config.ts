@@ -7,6 +7,7 @@ import { InitService } from '../core/services/init-service';
 import { lastValueFrom } from 'rxjs';
 import { errorInterceptor } from '../core/services/error-interceptor';
 import { jwtInterceptor } from '../core/services/jwt-interceptor';
+import { loadingInterceptor } from '../core/services/loading-interceptor';
 
 
 // here we add stuff that is used by the whole app
@@ -15,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes,withViewTransitions()),
-    provideHttpClient(withInterceptors([errorInterceptor,jwtInterceptor])),
+    provideHttpClient(withInterceptors([errorInterceptor,jwtInterceptor,loadingInterceptor])),
     provideAppInitializer(async () => {
       const initService = inject(InitService);
 

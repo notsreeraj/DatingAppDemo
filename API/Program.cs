@@ -79,8 +79,6 @@ catch (Exception ex)
 #endregion
 
 
-
-
 app.Run();
 
 // this is how the authenticatio works , mainly the order of methods 
